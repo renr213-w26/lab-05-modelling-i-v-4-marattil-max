@@ -73,6 +73,8 @@ c.  Now, fit a linear model that predicts `weight` from `habit`. Provide the tid
 
 d.  Write the estimated least squares regression line below using proper notation.
 
+    $\hat{y}$ = 7.270 - 0.593\*x
+
     ```{r}
     plot(0:10, main = expression(y ==7.270  - 0.593*x))
 
@@ -162,7 +164,7 @@ c.  Visualize the relationship between the two variables.
 
 d.  Use the visualization to describe the relationship between the two variables.
 
-    **There seems to be a stong negative relationship between divergence time and parsitism similary between the 2 species. As time increase and the species evolve apart from one another in-terms of genetic and physical similarity, the measure of parasitic similarity has a decrease.**
+    **There seems to be a strong negative relationship between divergence time and parasitism similarity between the 2 species. As time increase and the species evolve apart from one another in-terms of genetic and physical similarity, the measure of parasitic similarity has a decrease.**
 
 ## Question 4
 
@@ -180,9 +182,26 @@ a.  Fit the model and write the estimated regression equation.
 
 b.  Interpret the slope and the intercept in the context of the data.
 
+    -   **Slope = -0.0065**
+
+        **For each increase in million years, there is decrease in proportions of parasite similarity by 0.0065. This shows a weak negative relationship between divergence time and parasite similarity, therefore, increase difference between two species relates to decrease similarities in the parasites of the species themselves.**
+
+    -   **Intercept = 0.3795**
+
+        **At a point in time (0million years), where the two species was initally one species, the parasite similarity was 0.3795. This value is the maximum value for parasite similarity on average.**
+
 c.  Recreate the visualization from Question 3, this time adding a regression line to the visualization.
 
+    ```{r}
+    #add regression line
+    ggplot(parasites, aes(x= divergence_time, y =parsim)) +
+      geom_point()+
+      geom_smooth(method = "lm")
+    ```
+
 d.  What do you notice about the prediction (regression) line that may be strange, particularly for very large divergence times?
+
+    **The regression line visualization shows a predicted parsim value out of the 0-1 range and into the negative values as divergence time increases signifcantly.**
 
 ## Question 5
 
@@ -190,13 +209,28 @@ Since `parsim` takes values between 0 and 1, we want to transform this variable 
 
 a.  Using mutate, create a new variable `transformed_parsim` that is calculated as `log(parsim/(1-parsim))`. Add this variable to your data frame.
 
+    ```{r}
+    parasites <- parasites |>
+      mutate(transformed_parsim = log(parsim / (1 - parsim)))
+    head(parasites)
+    ```
+
     ::: callout-note
     `log()` in R represents the **nautral log**.
     :::
 
 b.  Then, visualize the relationship between divergence_time and `transformed_parsim`. Add a regression line to your visualization.
 
+    ```{r}
+    #add regression line
+    ggplot(parasites, aes(x= divergence_time, y =transformed_parsim)) +
+      geom_point()+
+      geom_smooth(method = "lm")
+    ```
+
 c.  Write a 1-2 sentence description of what you observe in the visualization.
+
+    **After the transformation, the observed data is more linear and fiting with the regression line. Additionally, by adjusting the range, the predictive assuptions by the regression line makes more sense.**
 
 ## Question 6
 
@@ -214,7 +248,31 @@ To answer this question, begin by fitting a linear regression model to each pair
 
 a.  Report the slopes for each of these models. Use proper notation.
 
+    ```{r}
+    dt_model<- lm (transformed_parsim ~ divergence_time, data = parasites)
+    dist_model<- lm (transformed_parsim ~ distance, data = parasites)
+    BM_model<- lm (transformed_parsim ~ BMdiff, data = parasites)
+    prec_model<- lm (transformed_parsim ~ precdiff, data = parasites)
+
+    #slope
+    coef(dt_model)[2]
+    coef(dist_model)[2]
+    coef(BM_model)[2]
+    coef(prec_model)[2]
+
+    ```
+
+    **divergence_time:** $\Delta$**y = -0.0907**
+
+    **distance:** $\Delta$**y = -0.0003**
+
+    **BMdiff:** $\Delta$**y = -5.0444e-06**
+
+    **precdiff:** $\Delta$**y = -0.0060**
+
 b.  To answer the question of interest, would it be useful to compare the slopes in each model to choose the variable that is the strongest predictor of parasite similarity? Why or why not?
+
+    **The domains of each variable pair are very different from one another (eg, divergence_time in million years vs distance in km). Thus, the values of the slopes alone are not comparable for any conclusions between the variables.**
 
 ## Question 7
 
@@ -226,7 +284,20 @@ You can calculate $R^2$ using the glance function. For example, you can calculat
 
 a.  Calculate and report $R^2$ for each model fit in the previous exercise.
 
+    ```{r}
+    print("divergence_time")
+    glance(dt_model)$r.squared
+    print("distance")
+    glance(dist_model)$r.squared
+    print("BMdiff")
+    glance(BM_model)$r.squared
+    print("precdiff")
+    glance(prec_model)$r.squared
+    ```
+
 b.  To answer our question of interest, would it be useful to compare the $R^2$ in each model to choose the variable that is the strongest predictor of parasite similarity? Why or why not?
+
+    **Because** $R^2$ **is the coefficient of determination, it shows the proportion of variance in the specific variable comparison in a scale-free method. Through this, each value of \$R\^2\$ is isolated in its analysis but comparable in representing the fit of the model. Thus, divergence_time has the strongest predictor of parasite similarity, and BMdiff is the weakest predictor.** 
 
 # Part 3 - GDP and life expectancy
 

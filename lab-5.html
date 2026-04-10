@@ -266,6 +266,7 @@ Loading required package: usdata</code></pre>
 </div>
 </div></li>
 <li><p>Write the estimated least squares regression line below using proper notation.</p>
+<p><span class="math inline">\(\hat{y}\)</span> = 7.270 - 0.593*x</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">main =</span> <span class="fu">expression</span>(y <span class="sc">==</span><span class="fl">7.270</span>  <span class="sc">-</span> <span class="fl">0.593</span><span class="sc">*</span>x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -383,7 +384,7 @@ dbl (5): divergence_time, distance, BMdiff, precdiff, parsim
 </div>
 </div></li>
 <li><p>Use the visualization to describe the relationship between the two variables.</p>
-<p><strong>There seems to be a stong negative relationship between divergence time and parsitism similary between the 2 species. As time increase and the species evolve apart from one another in-terms of genetic and physical similarity, the measure of parasitic similarity has a decrease.</strong></p></li>
+<p><strong>There seems to be a strong negative relationship between divergence time and parasitism similarity between the 2 species. As time increase and the species evolve apart from one another in-terms of genetic and physical similarity, the measure of parasitic similarity has a decrease.</strong></p></li>
 </ol>
 </section>
 <section id="question-4" class="level2">
@@ -405,9 +406,32 @@ dbl (5): divergence_time, distance, BMdiff, precdiff, parsim
 2 divergence_time -0.00653  0.000312     -20.9 2.70e- 73</code></pre>
 </div>
 </div></li>
-<li><p>Interpret the slope and the intercept in the context of the data.</p></li>
-<li><p>Recreate the visualization from Question 3, this time adding a regression line to the visualization.</p></li>
-<li><p>What do you notice about the prediction (regression) line that may be strange, particularly for very large divergence times?</p></li>
+<li><p>Interpret the slope and the intercept in the context of the data.</p>
+<ul>
+<li><p><strong>Slope = -0.0065</strong></p>
+<p><strong>For each increase in million years, there is decrease in proportions of parasite similarity by 0.0065. This shows a weak negative relationship between divergence time and parasite similarity, therefore, increase difference between two species relates to decrease similarities in the parasites of the species themselves.</strong></p></li>
+<li><p><strong>Intercept = 0.3795</strong></p>
+<p><strong>At a point in time (0million years), where the two species was initally one species, the parasite similarity was 0.3795. This value is the maximum value for parasite similarity on average.</strong></p></li>
+</ul></li>
+<li><p>Recreate the visualization from Question 3, this time adding a regression line to the visualization.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add regression line</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(parasites, <span class="fu">aes</span>(<span class="at">x=</span> divergence_time, <span class="at">y =</span>parsim)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab-5_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>What do you notice about the prediction (regression) line that may be strange, particularly for very large divergence times?</p>
+<p><strong>The regression line visualization shows a predicted parsim value out of the 0-1 range and into the negative values as divergence time increases signifcantly.</strong></p></li>
 </ol>
 </section>
 <section id="question-5" class="level2">
@@ -415,6 +439,23 @@ dbl (5): divergence_time, distance, BMdiff, precdiff, parsim
 <p>Since <code>parsim</code> takes values between 0 and 1, we want to transform this variable so that it can range between (−∞,+∞). This will be better suited for fitting a regression model (and interpreting predicted values!)</p>
 <ol type="a">
 <li><p>Using mutate, create a new variable <code>transformed_parsim</code> that is calculated as <code>log(parsim/(1-parsim))</code>. Add this variable to your data frame.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>parasites <span class="ot">&lt;-</span> parasites <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">transformed_parsim =</span> <span class="fu">log</span>(parsim <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> parsim)))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(parasites)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 8
+  species1        species2       divergence_time distance BMdiff precdiff parsim
+  &lt;chr&gt;           &lt;chr&gt;                    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+1 Alouatta_caraya Alouatta_guar…            4.57     932.   389.    57.5   0.318
+2 Alouatta_caraya Alouatta_pall…            3.89    3456.  1000.    54.9   0.226
+3 Alouatta_caraya Alouatta_seni…            2.89    1908.   821.     9.53  0.25 
+4 Alouatta_caraya Aotus_trivirg…           21.3     1497.  4665.    27.6   0.154
+5 Alouatta_caraya Ateles_geoffr…           14.8     3785.  2005.    54.9   0.24 
+6 Alouatta_caraya Ateles_panisc…           14.8     1422.  3120.    16.7   0.214
+# ℹ 1 more variable: transformed_parsim &lt;dbl&gt;</code></pre>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -428,8 +469,25 @@ Note
 <p><code>log()</code> in R represents the <strong>nautral log</strong>.</p>
 </div>
 </div></li>
-<li><p>Then, visualize the relationship between divergence_time and <code>transformed_parsim</code>. Add a regression line to your visualization.</p></li>
-<li><p>Write a 1-2 sentence description of what you observe in the visualization.</p></li>
+<li><p>Then, visualize the relationship between divergence_time and <code>transformed_parsim</code>. Add a regression line to your visualization.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#add regression line</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(parasites, <span class="fu">aes</span>(<span class="at">x=</span> divergence_time, <span class="at">y =</span>transformed_parsim)) <span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab-5_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Write a 1-2 sentence description of what you observe in the visualization.</p>
+<p><strong>After the transformation, the observed data is more linear and fiting with the regression line. Additionally, by adjusting the range, the predictive assuptions by the regression line makes more sense.</strong></p></li>
 </ol>
 </section>
 <section id="question-6" class="level2">
@@ -443,8 +501,41 @@ Note
 <li><p><code>precdiff</code> and <code>transformed_parsim</code></p></li>
 </ul>
 <ol type="a">
-<li><p>Report the slopes for each of these models. Use proper notation.</p></li>
-<li><p>To answer the question of interest, would it be useful to compare the slopes in each model to choose the variable that is the strongest predictor of parasite similarity? Why or why not?</p></li>
+<li><p>Report the slopes for each of these models. Use proper notation.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>dt_model<span class="ot">&lt;-</span> <span class="fu">lm</span> (transformed_parsim <span class="sc">~</span> divergence_time, <span class="at">data =</span> parasites)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>dist_model<span class="ot">&lt;-</span> <span class="fu">lm</span> (transformed_parsim <span class="sc">~</span> distance, <span class="at">data =</span> parasites)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>BM_model<span class="ot">&lt;-</span> <span class="fu">lm</span> (transformed_parsim <span class="sc">~</span> BMdiff, <span class="at">data =</span> parasites)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>prec_model<span class="ot">&lt;-</span> <span class="fu">lm</span> (transformed_parsim <span class="sc">~</span> precdiff, <span class="at">data =</span> parasites)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#slope</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(dt_model)[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>divergence_time 
+    -0.09066296 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(dist_model)[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     distance 
+-0.0002739886 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(BM_model)[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       BMdiff 
+-5.044374e-06 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(prec_model)[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    precdiff 
+-0.006012838 </code></pre>
+</div>
+</div>
+<p><strong>divergence_time:</strong> <span class="math inline">\(\Delta\)</span><strong>y = -0.0907</strong></p>
+<p><strong>distance:</strong> <span class="math inline">\(\Delta\)</span><strong>y = -0.0003</strong></p>
+<p><strong>BMdiff:</strong> <span class="math inline">\(\Delta\)</span><strong>y = -5.0444e-06</strong></p>
+<p><strong>precdiff:</strong> <span class="math inline">\(\Delta\)</span><strong>y = -0.0060</strong></p></li>
+<li><p>To answer the question of interest, would it be useful to compare the slopes in each model to choose the variable that is the strongest predictor of parasite similarity? Why or why not?</p>
+<p><strong>The domains of each variable pair are very different from one another (eg, divergence_time in million years vs distance in km). Thus, the values of the slopes alone are not comparable for any conclusions between the variables.</strong></p></li>
 </ol>
 </section>
 <section id="question-7" class="level2">
@@ -453,8 +544,43 @@ Note
 <p>As you may have guessed from the name <span class="math inline">\(R^2\)</span> can be calculated by squaring the correlation when we have a simple linear regression model. The correlation r takes values -1 to 1, therefore, <span class="math inline">\(R^2\)</span> takes values 0 to 1. Intuitively, if r=1 or −1, then <span class="math inline">\(R^2\)</span>=1, indicating the model is a perfect fit for the data. If r≈0 then <span class="math inline">\(R^2\)</span>≈0, indicating the model is a very bad fit for the data.</p>
 <p>You can calculate <span class="math inline">\(R^2\)</span> using the glance function. For example, you can calculate <span class="math inline">\(R^2\)</span> for <code>dt_model</code> using the code <code>glance(dt_model)$r.squared</code>.</p>
 <ol type="a">
-<li><p>Calculate and report <span class="math inline">\(R^2\)</span> for each model fit in the previous exercise.</p></li>
-<li><p>To answer our question of interest, would it be useful to compare the <span class="math inline">\(R^2\)</span> in each model to choose the variable that is the strongest predictor of parasite similarity? Why or why not?</p></li>
+<li><p>Calculate and report <span class="math inline">\(R^2\)</span> for each model fit in the previous exercise.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"divergence_time"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "divergence_time"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(dt_model)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5125147</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"distance"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "distance"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(dist_model)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4432029</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"BMdiff"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BMdiff"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(BM_model)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.003269571</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"precdiff"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "precdiff"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(prec_model)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.008611603</code></pre>
+</div>
+</div></li>
+<li><p>To answer our question of interest, would it be useful to compare the <span class="math inline">\(R^2\)</span> in each model to choose the variable that is the strongest predictor of parasite similarity? Why or why not?</p>
+<p><strong>Because</strong> <span class="math inline">\(R^2\)</span> <strong>is the coefficient of determination, it shows the proportion of variance in the specific variable comparison in a scale-free method. Through this, each value of $R^2$ is isolated in its analysis but comparable in representing the fit of the model. Thus, divergence_time has the strongest predictor of parasite similarity, and BMdiff is the weakest predictor.</strong>&nbsp;</p></li>
 </ol>
 </section>
 </section>
