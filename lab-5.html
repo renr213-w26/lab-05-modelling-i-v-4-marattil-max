@@ -204,7 +204,8 @@ Important
 Loading required package: cherryblossom
 Loading required package: usdata</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="question-1" class="level2">
 <h2 class="anchored" data-anchor-id="question-1">Question 1</h2>
@@ -598,35 +599,154 @@ Note
 <section id="question-8" class="level2">
 <h2 class="anchored" data-anchor-id="question-8">Question 8</h2>
 <ol type="a">
-<li><p><strong>Data:</strong> For our analysis, we will only be working with data from 2007. Below, filter the data set so only values from the year 2007 are shown. Save this data set as <code>gapminder_07</code> and use it for the remainder of this exercise and the following.</p></li>
+<li><p><strong>Data:</strong> For our analysis, we will only be working with data from 2007. Below, filter the data set so only values from the year 2007 are shown. Save this data set as <code>gapminder_07</code> and use it for the remainder of this exercise and the following.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gapminder)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>gapminder_07 <span class="ot">&lt;-</span> gapminder <span class="sc">|&gt;</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span><span class="dv">2007</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gapminder_07)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+  country     continent  year lifeExp      pop gdpPercap
+  &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+1 Afghanistan Asia       2007    43.8 31889923      975.
+2 Albania     Europe     2007    76.4  3600523     5937.
+3 Algeria     Africa     2007    72.3 33333216     6223.
+4 Angola      Africa     2007    42.7 12420476     4797.
+5 Argentina   Americas   2007    75.3 40301927    12779.
+6 Australia   Oceania    2007    81.2 20434176    34435.</code></pre>
+</div>
+</div></li>
 <li><p><strong>Visualization:</strong> We are interested in learning more about GDP, and we’ll start with exploring the relationship between life expectancy and GDP. Create two visualizations:</p>
 <ul>
-<li><p>Scatter plot of <code>gdpPercap</code> vs.&nbsp;<code>lifeExp</code>.</p></li>
-<li><p>Scatter plot of <code>gdpPercap_log</code> vs.&nbsp;<code>lifeExp</code>, where <code>gdpPercap_log</code> is a new variable you add to the data set by taking the natural log of <code>gdpPercap</code>.</p></li>
+<li>Scatter plot of <code>gdpPercap</code> vs.&nbsp;<code>lifeExp</code></li>
 </ul>
-<p>First describe the relationship between each pair of the variables. Then, comment on which relationship would be better modeled using a linear model, and explain your reasoning.</p></li>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gapminder_07, <span class="fu">aes</span>(<span class="at">x =</span> gdpPercap, <span class="at">y =</span> lifeExp)) <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab-5_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Scatter plot of <code>gdpPercap_log</code> vs.&nbsp;<code>lifeExp</code>, where <code>gdpPercap_log</code> is a new variable you add to the data set by taking the natural log of <code>gdpPercap</code>.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>gapminder_07 <span class="ot">&lt;-</span> gapminder_07 <span class="sc">|&gt;</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gdpPercap_log =</span> <span class="fu">log</span>(gdpPercap))</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co">#graph</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gapminder_07, <span class="fu">aes</span>(<span class="at">x =</span> gdpPercap_log, <span class="at">y =</span> lifeExp)) <span class="sc">+</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab-5_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>First describe the relationship between each pair of the variables. Then, comment on which relationship would be better modeled using a linear model, and explain your reasoning.</p>
+<p><strong>There is a strong positive relationship between life expectancy and GDP per capita, which is better shown in the second model (using log), as it is a linearized version of the raw data and better fit for a linear regression application.</strong></p></li>
 <li><p><strong>Model fitting:</strong></p>
 <ul>
 <li>Fit a linear model predicting log gross domestic product from life expectancy. Display the tidy summary.</li>
-</ul></li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">#linear model</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>life_expectancy_model<span class="ot">&lt;-</span> <span class="fu">lm</span> (lifeExp <span class="sc">~</span> gdpPercap_log, <span class="at">data =</span> gapminder_07)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co">#tidy summary</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(life_expectancy_model, <span class="at">conf.int =</span> <span class="cn">FALSE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  term          estimate std.error statistic  p.value
+  &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)       4.95     3.86       1.28 2.02e- 1
+2 gdpPercap_log     7.20     0.442     16.3  4.12e-34</code></pre>
+</div>
+</div></li>
 <li><p><strong>Model evaluation:</strong></p>
 <ul>
-<li><p>Calculate the R-squared of the model using two methods and confirm that the values match: first method is using <code>glance()</code> and the other method is based on the value of the correlation coefficient between the two variables.</p></li>
-<li><p>Interpret R-squared in the context of the data and the research question.</p></li>
-</ul></li>
+<li>Calculate the R-squared of the model using two methods and confirm that the values match: first method is using <code>glance()</code> and the other method is based on the value of the correlation coefficient between the two variables.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Glance Method:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Glance Method:"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(prec_model)<span class="sc">$</span>r.squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.008611603</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Correlation Method:"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Correlation Method:"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>corr_r_squared <span class="ot">&lt;-</span> <span class="fu">cor</span>(gapminder_07<span class="sc">$</span>lifeExp, gapminder_07<span class="sc">$</span>gdpPercap_log)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>corr_r_squared</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.654449</code></pre>
+</div>
+</div>
+<ul>
+<li>Interpret R-squared in the context of the data and the research question.</li>
+</ul>
+<p><strong>The R-squared value indicates that about 65 .4% of the variation in life expectancy across countries in 2007 can be explained by differences in GDP per capita. This suggests a strong positive association between the varibles. However, ~30% of the variation remains unexplained by the model, which could be attributed to other factors.</strong></p></li>
 </ol>
 </section>
 <section id="question-9" class="level2">
 <h2 class="anchored" data-anchor-id="question-9">Question 9</h2>
 <p>Next, we want to examine if the relationship between GDP and life expectancy that we observed in the previous exercise holds across all continents in our data. We’ll continue to work with logged GDP (<code>gdpPercap_log</code>) and data from 2007.</p>
 <ol type="a">
-<li><p><strong>Justification:</strong> Create a scatter plot of <code>gdpPercap_log</code> vs.&nbsp;<code>lifeExp</code>, where the points are colored by <code>continent</code>. Do you think the trend between <code>gdpPercap_log</code> and <code>lifeExp</code> is different for different continents? Justify your answer with specific features of the plot.</p></li>
+<li><strong>Justification:</strong> Create a scatter plot of <code>gdpPercap_log</code> vs.&nbsp;<code>lifeExp</code>, where the points are colored by <code>continent</code>. Do you think the trend between <code>gdpPercap_log</code> and <code>lifeExp</code> is different for different continents? Justify your answer with specific features of the plot.</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gapminder_07, <span class="fu">aes</span>(<span class="at">x =</span> gdpPercap_log, <span class="at">y =</span> lifeExp, <span class="at">colour =</span> continent)) <span class="sc">+</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab-5_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Yes, the trend appears different across continents based on the scatter plot. For example, Africa shows the widest spread with generally lower GDP and lower life expectancy. The slope appears flatter with many countries below the global trend. On the other hand, Europe &amp; Oceania show the strongest positive relationship with consistently high life expectancy (75-82 years) across a range of GDP values</strong></p>
+<ol type="a">
 <li><p><strong>Model fitting and interpretation:</strong></p>
 <ul>
-<li><p>Regardless of your answer in part (a), fit an <u>additive model</u> (main effects) that predicts <code>gdpPercap_log</code> from life expectancy and continent (with Africas as the baseline level). Display a tidy summary of the model output.</p></li>
-<li><p>Interpret the <em>intercept</em> of the model, making sure that your interpretation is in the units of the original data (not on log scale).</p></li>
-<li><p>Interpret the <em>slope</em> of the model, making sure that your interpretation is in the units of the original data (not on log scale).</p></li>
-</ul></li>
+<li>Regardless of your answer in part (a), fit an <u>additive model</u> (main effects) that predicts <code>gdpPercap_log</code> from life expectancy and continent (with Africas as the baseline level). Display a tidy summary of the model output.</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>continent_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(lifeExp <span class="sc">~</span> gdpPercap_log <span class="sc">+</span> continent, <span class="at">data =</span> gapminder_07)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(continent_model, <span class="at">conf.int =</span> <span class="cn">FALSE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  term              estimate std.error statistic  p.value
+  &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept)          20.1      4.03       4.99 1.79e- 6
+2 gdpPercap_log         4.63     0.527      8.78 6.14e-15
+3 continentAmericas    11.7      1.65       7.07 7.46e-11
+4 continentAsia        10.1      1.48       6.85 2.31e-10
+5 continentEurope      11.3      1.89       5.95 2.14e- 8
+6 continentOceania     12.9      4.52       2.86 4.91e- 3</code></pre>
+</div>
+</div>
+<ul>
+<li>Interpret the <em>intercept</em> of the model, making sure that your interpretation is in the units of the original data (not on log scale).</li>
+</ul>
+<p><strong>When GDP per capita is $1 (log = 0), the model predicts a life expectancy of approximately ~20 years for African countries. However, this is not meaningful in practice because no country has a GDP per capita of $1, and this represents extreme extrapolation outside the range of observed data.</strong></p>
+<ul>
+<li>Interpret the <em>slope</em> of the model, making sure that your interpretation is in the units of the original data (not on log scale).</li>
+</ul>
+<p><strong>The slope for <code>gdpPercap_log</code> represents the expected change in life expectancy (in years) for a one-unit increase in log(GDP per capita)</strong></p></li>
 <li><p><strong>Prediction:</strong> Predict the GDP of a country in Asia where the average life expectancy is 70 years old.</p></li>
 </ol>
 </section>
@@ -641,6 +761,7 @@ Note
 <li><p>What are your general take-aways from this presentation?</p></li>
 <li><p>What are your general take-aways from how this presentation was given?</p></li>
 </ul>
+<p><strong>The presentation transforms global development data through animated storytelling which maintains audience interest throughout the entire show. The moving bubble charts showed how countries evolved from their original state between two hundred years and helped understanding of complex statistical ideas through visual demonstrations. The most interesting part showed how China and Japan developed as they followed Western countries because both nations showed progress in health and wealth which disproved existing beliefs about worldwide inequality. The audience found it difficult to track country-specific movements during the first half of the 1800s because bubbles moved quickly but Rosling’s physical demonstrations created an engaging and understandable experience. Global health and wealth have improved throughout history because the world has experienced unprecedented progress which proves people wrong who share pessimistic views about development. The storytelling elements together with energetic performance and data visualizations function as essential components for effective data communication which enables audience members to emotionally connect with data points.</strong></p>
 </section>
 </section>
 <section id="wrap-up" class="level1">
